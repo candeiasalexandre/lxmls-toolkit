@@ -1,11 +1,21 @@
+import ipdb
+
 def greet(hour):
+    #ipdb.set_trace()
     if hour < 12:
-    print('Good morning!')
+        print('Good morning!')
     elif hour >= 12 and hour < 20:
-    print('Good afternoon!')
+        print('Good afternoon!')
     else:
-    import pdb; pdb.set_trace()
-    print('Good evening!')
+        print('Good evening!')
+
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 if __name__ == "__main__":
-    greet()
+    X = np.linspace(-4, 4, 1000)
+    plt.plot(X, X**2*np.cos(X**2))
+    plt.show()
+    #plt.savefig("simple.pdf")
+    #greet(10)
