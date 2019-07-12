@@ -3,7 +3,7 @@ import scipy as scipy
 import lxmls.classifiers.linear_classifier as lc
 import sys
 from lxmls.distributions.gaussian import *
-
+import ipdb
 
 class MultinomialNaiveBayes(lc.LinearClassifier):
 
@@ -21,7 +21,7 @@ class MultinomialNaiveBayes(lc.LinearClassifier):
         n_docs, n_words = x.shape
 
         # classes = a list of possible classes
-        classes = np.unique(y)
+        classes, counts = np.unique(y, return_counts=True)
         # n_classes = no. of classes
         n_classes = np.unique(y).shape[0]
 
@@ -41,9 +41,15 @@ class MultinomialNaiveBayes(lc.LinearClassifier):
 
         # ----------
         # Solution to Exercise 1
-
-        raise NotImplementedError("Complete Exercise 1")
-
+        prior = counts / n_docs
+        #ipdb.set_trace()
+        for class_k in classes:
+            indx = y==class_k
+            sums = np.sum(x[indx[:,0], :], axis=0)
+            total = np.sum(sums)
+            #for word_k in range(n_words):
+                #ipdb.set_trace()
+            likelihood[:, class_k] = (sums + 1.0) / (n_words + total)
         # End solution to Exercise 1
         # ----------
 
