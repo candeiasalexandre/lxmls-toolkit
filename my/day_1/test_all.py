@@ -73,4 +73,4 @@ if __name__ == "__main__":
             best_model = models_params[key][best_hyperparameter]
             fig, axis = sd.add_line(fig, axis, best_model, key, np.random.rand(3,))
             print("{} Model with Hyperparam: {}, train_acc: {}, test_acc {}".format(key, hyperparameter_values[idx], models_acc_train[key][idx], models_acc_test[key][idx]))
-    fig.plot()
+            
