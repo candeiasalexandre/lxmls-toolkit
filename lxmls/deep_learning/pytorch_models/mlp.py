@@ -42,12 +42,14 @@ class PytorchMLP(MLP):
 
         # Input
         tilde_z = input
-
+        num_hidden_layers = len(self.parameters) - 1
         # ----------
         # Solution to Exercise 4
-
-        raise NotImplementedError("Implement Exercise 4")
-
+        for n in range(num_hidden_layers):
+            tilde_z = torch.matmul(tilde_z, torch.t(self.parameters[n][0])) + self.parameters[n][1]
+            tilde_z = torch.sigmoid(tilde_z)
+        
+        log_tilde_z = self.logsoftmax(tilde_z)
         # End of solution to Exercise 4
         # ----------
 
