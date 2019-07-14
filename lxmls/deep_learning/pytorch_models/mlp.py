@@ -42,17 +42,17 @@ class PytorchMLP(MLP):
 
         # Input
         tilde_z = input
-        num_hidden_layers = len(self.parameters) - 1
         # ----------
         # Solution to Exercise 4
+        num_hidden_layers = len(self.parameters) - 1
         for n in range(num_hidden_layers):
             tilde_z = torch.matmul(tilde_z, torch.t(self.parameters[n][0])) + self.parameters[n][1]
             tilde_z = torch.sigmoid(tilde_z)
         
+        tilde_z = torch.matmul(tilde_z, torch.t(self.parameters[num_hidden_layers][0])) + self.parameters[num_hidden_layers][1]
         log_tilde_z = self.logsoftmax(tilde_z)
         # End of solution to Exercise 4
         # ----------
-
         return log_tilde_z
 
     def gradients(self, input, output):
