@@ -100,8 +100,9 @@ class NumpyMLP(MLP):
         # Solution to Exercise 2
         for n in reversed(range(num_layers)):
             W, b = self.parameters[n]
+            
             if n == num_layers -1:
-                last_error = log_prob_y - index2onehot(output, np.unique(output).shape[0])
+                last_error = log_prob_y - index2onehot(output, np.unique(output).shape[0]) + 0.0
             else:
                 last_error = np.multiply(last_error, np.multiply(layer_inputs[n-1], 1.0-layer_inputs[n-1]))
 
@@ -113,6 +114,7 @@ class NumpyMLP(MLP):
             last_error = np.matmul(W.T, last_error.T).T
             errors.append(last_error + 0.0)
             gradients.append((W_gradient, b_gradient))
+            
         gradients.reverse()
         # End of solution to Exercise 2
         # ----------
