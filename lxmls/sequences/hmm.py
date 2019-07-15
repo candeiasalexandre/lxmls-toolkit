@@ -3,7 +3,7 @@ import lxmls.sequences.sequence_classifier as sc
 import lxmls.sequences.confusion_matrix as cm
 from lxmls.sequences.log_domain import *
 import pdb
-
+import ipdb
 
 class HMM(sc.SequenceClassifier):
     """ Implements a first order HMM."""
@@ -142,9 +142,13 @@ class HMM(sc.SequenceClassifier):
 
         # ----------
         # Solution to Exercise 10
+        #ipdb.set_trace()
+        self.initial_counts += state_posteriors[0,:]
+        self.final_counts += state_posteriors[len(sequence.x)-1, :]
+        self.transition_counts += state_posteriors.sum(0)
 
-        raise NotImplementedError("Complete Exercise 10")
-
+        for i in range(len(sequence.x)):
+            self.emission_counts[sequence.x[i], :] += state_posteriors[i,:]
         # End of solution to Exercise 10
         # ----------
 
