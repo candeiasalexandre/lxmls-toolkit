@@ -43,12 +43,23 @@ class StructuredPerceptron(dsc.DiscriminativeSequenceClassifier):
 
         # ----------
         # Solution to Exercise 3
-
-        raise NotImplementedError("Complete Exercise 3")
-
+        #import ipdb; ipdb.set_trace()
+        pred_seq, pred_score = self.viterbi_decode(sequence)
+        true_features = self.feature_mapper.get_sequence_features(sequence)
+        pred_features = self.feature_mapper.get_sequence_features(pred_seq)
+        #self.parameters += 
+        num_mistakes = len(np.where(sequence.y != pred_seq.y)[0])
+        
+        for idx, feature in enumerate(true_features):
+            for feature_idx in feature:
+                self.parameters[feature_idx] += 1
+        for idx, feature in enumerate(pred_features):
+            for feature_idx in feature:
+                self.parameters[feature_idx] -= 1
+        
         # End of Solution to Exercise 3
         # ----------
-
+        return len(sequence.y), num_mistakes
     def save_model(self, dir):
         fn = open(dir + "parameters.txt", 'w')
         for p_id, p in enumerate(self.parameters):
