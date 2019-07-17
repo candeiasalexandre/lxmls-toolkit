@@ -9,7 +9,7 @@ geometry = [corpus.nr_features, 20, 2]
 activation_functions = ['sigmoid', 'softmax']
 
 # Optimization
-learning_rate = 0.05
+learning_rate = 0.5
 num_epochs = 10
 batch_size = 30
 

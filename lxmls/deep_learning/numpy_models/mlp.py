@@ -33,10 +33,9 @@ class NumpyMLP(MLP):
         learning_rate = self.config['learning_rate']
         num_parameters = len(self.parameters)
         for m in np.arange(num_parameters):
-
+            #ipdb.set_trace()
             # Update weight
             self.parameters[m][0] -= learning_rate * gradients[m][0]
-
             # Update bias
             self.parameters[m][1] -= learning_rate * gradients[m][1]
 
@@ -102,7 +101,7 @@ class NumpyMLP(MLP):
             W, b = self.parameters[n]
             
             if n == num_layers -1:
-                last_error = np.exp(log_prob_y) - index2onehot(output, np.unique(output).shape[0]) + 0.0
+                last_error = (-1.0)*np.exp(log_prob_y) + index2onehot(output, np.unique(output).shape[0]) + 0.0
             else:
                 last_error = np.multiply(last_error, np.multiply(layer_inputs[n-1], 1.0-layer_inputs[n-1]))
 
@@ -110,7 +109,7 @@ class NumpyMLP(MLP):
             W_gradient = (-1.0/num_examples) * np.matmul(last_error.T, layer_inputs[n]) + 0.0
             b_gradient = (-1.0/num_examples) * np.sum(last_error, axis=0) + 0.0
             
-            ipdb.set_trace()
+            #ipdb.set_trace()
             last_error = np.matmul(W.T, last_error.T).T
             errors.append(last_error + 0.0)
             gradients.append((W_gradient, b_gradient))
