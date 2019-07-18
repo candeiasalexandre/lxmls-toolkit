@@ -85,9 +85,30 @@ class NumpyRNN(RNN):
 
         # ----------
         # Solution to Exercise 1
+        error_y = np.zeros((nr_steps, W_y.shape[0]))
+        output_onehot = index2onehot(output, p_y.shape[1])
+        for t in range(nr_steps):
+            #import ipdb; ipdb.set_trace()
+            error_y[t,:] = output_onehot[t, :] - p_y[t,:]
 
-        raise NotImplementedError("Implement Exercise 1")
+        error_r = np.zeros(W_y.shape[1])
+        x_e = index2onehot(x, W_e.shape[0])
+        for t in reversed(range(nr_steps)):
+            #import ipdb; ipdb.set_trace()
+            error_h = np.multiply( error_r + np.matmul(W_y.T, error_y[t,:]), np.multiply(h[t+1,:], 1.0-h[t+1,:]) )
+            error_r = np.matmul(W_h.T, error_h)
+            error_e = np.matmul(W_x.T, error_h)
 
+            gradient_W_y += np.outer(error_y[t,:], h[t+1, :])
+            gradient_W_h += np.outer(error_h, h[t-1, :])
+            gradient_W_x += np.outer(error_h, z_e[t, :])
+            gradient_W_e += np.outer(error_e, x_e[t,:]).T
+           
+            
+        gradient_W_e = gradient_W_e * (-1.0/nr_steps)
+        gradient_W_h = gradient_W_h * (-1.0/nr_steps)
+        gradient_W_x = gradient_W_x * (-1.0/nr_steps)
+        gradient_W_y = gradient_W_y * (-1.0/nr_steps)
         # End of Solution to Exercise 1
         # ----------
 
