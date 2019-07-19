@@ -43,7 +43,7 @@ class PytorchRNN(RNN):
         self.parameters[0] = self.embedding_layer.weight
 
         # Log softmax
-        self.logsoftmax = torch.nn.LogSoftmax(dim=1)
+        self.logsoftmax = torch.nn.LogSoftmax(dim=0)
 
         # Negative-log likelihood
         self.loss = torch.nn.NLLLoss()
@@ -91,12 +91,18 @@ class PytorchRNN(RNN):
 
         # ----------
         # Solution to Exercise 2
-
-        raise NotImplementedError("Implement Exercise 2")
-
+        z_e = W_e[input, :]
+        h = torch.zeros(hidden_size)
+        log_p_y = torch.zeros((nr_steps, W_y.shape[0]))
+        #import ipdb; ipdb.set_trace()
+        for t in range(1,nr_steps+1):
+            y_sum = torch.matmul(W_h, h) + torch.matmul( W_x, z_e[t-1,:])
+            y_sig = torch.sigmoid(y_sum)
+            h = y_sig
+            #import ipdb; ipdb.set_trace()
+            log_p_y[t-1, :] = self.logsoftmax( torch.matmul(W_y, y_sig) )
         # End of solution to Exercise 2
         # ----------
-
         return log_p_y
 
     def backpropagation(self, input, output):
