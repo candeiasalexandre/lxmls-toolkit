@@ -1,0 +1,2 @@
+from lxmls.reinforcement_learning.score_function_estimator import train
+train()

@@ -30,7 +30,7 @@ def gt(rewardlist, gamma=0.1):
     return summe
 
 
-def train():
+def train(alfa=0.01):
 
     valuelist = []
     rewards = np.array([10., 2., 3.])/10
@@ -52,12 +52,18 @@ def train():
         rew = gt(rewardlist[:], 0.99)
         grad_list = []
         for j, (state, action) in enumerate(state_action_list):
-
             # ----------
             # Solution to Exercise 6.3
-
-            raise NotImplementedError("Exercise 6.3")
-
+            #import ipdb; ipdb.set_trace()
+            #compute actual return
+            G_t = gt(rewardlist[0:j+1])
+            # get policy and comput gradients
+            log_output_policy = model.forward()
+            log_output_policy[state, action].backward()
+            log_policy_gradient = model.t_policy.grad.data
+            #grad_list.append(log_policy_gradient)
+            with torch.no_grad():
+                model.t_policy += alfa * G_t * log_policy_gradient
         # code needed at this identation level!
 
         # End of solution to Exercise 6.3
