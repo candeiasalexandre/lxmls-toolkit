@@ -35,7 +35,7 @@ def train(alfa=0.01):
     valuelist = []
     rewards = np.array([10., 2., 3.])/10
     model = Model()
-    optim = torch.optim.SGD([model.t_policy], lr=0.01)
+    #optim = torch.optim.SGD([model.t_policy], lr=0.01)
     for i in range(10001):
         poli = torch.nn.functional.softmax(model.t_policy).data.numpy()
         state_action_list = []
@@ -56,23 +56,27 @@ def train(alfa=0.01):
             # Solution to Exercise 6.3
             #import ipdb; ipdb.set_trace()
             #compute actual return
-            G_t = gt(rewardlist[0:j+1])
             # get policy and comput gradients
             log_output_policy = model.forward()
             log_output_policy[state, action].backward()
-            log_policy_gradient = model.t_policy.grad.data
+            log_policy_gradient = model.t_policy.grad.data + 0.0
+            grad_list.append(log_policy_gradient)
+            model.t_policy.grad.data.zero_()
             #grad_list.append(log_policy_gradient)
-            with torch.no_grad():
-                model.t_policy += alfa * G_t * log_policy_gradient
-        # code needed at this identation level!
 
+        #import ipdb; ipdb.set_trace()
+        average_log_policy_gradient = torch.stack(grad_list, dim=0).sum(dim=0)
+        with torch.no_grad():
+                model.t_policy += alfa * rew * average_log_policy_gradient
+        # code needed at this identation level!
+        
         # End of solution to Exercise 6.3
         # ----------
 
         value = (gt(rewardlist, 1))
         valuelist.append(value)
 
-        if i % 100 == 0:
+        if i % 1000 == 0:
             print(poli)
             print(rewardlist)
             plt.plot(valuelist)
