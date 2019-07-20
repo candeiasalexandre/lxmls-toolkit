@@ -9,19 +9,28 @@ import math
 import matplotlib.pyplot as plt
 
 
+def cast_float(variable):
+    return Variable(torch.from_numpy(variable).float(), requires_grad=True)
+
 class PolicyGradient(nn.Module):
 
     def __init__(self):
         super(PolicyGradient, self).__init__()
         self.linear = nn.Linear(4, 8)
         self.linear2 = nn.Linear(8, 2)
+        self.logsoftmax = torch.nn.LogSoftmax(dim=0)
 
     def forward(self, state):
 
         # ----------
         # Solution to Exercise 6.4
 
-        raise Exception("Complete exercise 6.4")
+        input=cast_float(state)
+
+        _h = self.linear(input)
+        _h = torch.sigmoid(_h)
+        _h = self.linear2(_h)
+        return self.logsoftmax(_h)
 
         # End of solution to Exercise 6.4
         # ----------
@@ -53,10 +62,10 @@ def train():
         observations = []
         observation = env.reset()
         while True:
-
+            #import ipdb; ipdb.set_trace()
             action = int(np.random.choice(
                 range(2),
-                p=np.exp(policy(observation).data.numpy()[0]))
+                p=np.exp(policy(observation).data.numpy()))
             )
             observation_, reward, finished, info = env.step(action)
             observations.append((observation, action, reward, observation_))
@@ -81,6 +90,7 @@ def train():
                     action = torch.autograd.Variable(
                         torch.LongTensor([action])
                     )
+                    import ipdb; ipdb.set_trace()
                     result = policy(observation)
                     loss = criterion(result, action)
                     (loss * cum_reward).backward()

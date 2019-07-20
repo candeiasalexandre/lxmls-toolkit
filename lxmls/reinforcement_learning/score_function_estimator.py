@@ -65,7 +65,7 @@ def train(alfa=0.01):
             #grad_list.append(log_policy_gradient)
 
         #import ipdb; ipdb.set_trace()
-        average_log_policy_gradient = torch.stack(grad_list, dim=0).sum(dim=0)
+        average_log_policy_gradient = torch.stack(grad_list, dim=0).mean(dim=0)
         with torch.no_grad():
                 model.t_policy += alfa * rew * average_log_policy_gradient
         # code needed at this identation level!
